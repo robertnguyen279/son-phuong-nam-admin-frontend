@@ -82,6 +82,7 @@ const CreateProduct = ({ handleChangeView }: ICreateProduct): React.ReactElement
   React.useEffect(() => {
     if (createProductError && createProductError.includes('name')) {
       message.error('Tên sản phẩm bị trùng');
+      dispatch(getProducts());
     } else if (createProductError) {
       message.error(createProductError);
     }
