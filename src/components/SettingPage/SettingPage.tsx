@@ -79,7 +79,7 @@ const SettingPage = (): React.ReactElement => {
       .delete('/user/logout')
       .then((response) => {
         if (response.data.statusCode === 200) {
-          localStorage.removeItem('21cenAuthTokens');
+          localStorage.removeItem('SonPhuongNamAuthTokens');
           dispatch(logoutUser());
           setTimeout(() => {
             message.success('Đăng xuất thành công');
