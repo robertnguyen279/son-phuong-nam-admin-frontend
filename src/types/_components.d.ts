@@ -137,10 +137,10 @@ export interface IEditCarousel {
 
 export interface IEditInfo {
   info: {
-    zalo: number;
-    facebook: string;
+    taxCode: string;
+    address: string;
     email: string;
-    phone: number;
+    phone: string;
   };
   handleChangeView(): void;
 }

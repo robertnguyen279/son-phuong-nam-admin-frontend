@@ -5,38 +5,35 @@ import { useFormik } from 'formik';
 import { Input } from 'components/Form';
 import Button from 'components/Button';
 import CancelButton from 'components/CancelButton';
-import { convertInternationalPhone, convertVietnamesePhone } from 'services/common.service';
 import axios from 'services/axios.service';
 import { message } from 'antd';
 
 const EditInfo = ({ handleChangeView, info }: IEditInfo): React.ReactElement => {
   const formik = useFormik({
     initialValues: {
-      phone: convertInternationalPhone(info.phone.toString()),
+      phone: info.phone,
       email: info.email,
-      facebook: info.facebook,
-      zalo: convertInternationalPhone(info.zalo.toString()),
+      taxCode: info.taxCode,
+      address: info.address,
     },
     validationSchema: Yup.object().shape({
-      phone: Yup.number().required('Bạn phải nhập mục này'),
+      phone: Yup.string().required('Bạn phải nhập mục này'),
       email: Yup.string().email('Email không hợp lệ').required('Bạn phải nhập mục này'),
-      facebook: Yup.string().required('Bạn phải nhập mục này'),
-      zalo: Yup.number().required('Bạn phải nhập mục này'),
+      taxCode: Yup.string().required('Bạn phải nhập mục này'),
+      address: Yup.string().required('Bạn phải nhập mục này'),
     }),
     onSubmit: (submitObject) => {
-      const cloneObject = { ...submitObject };
-      cloneObject.phone = convertVietnamesePhone(submitObject.phone);
-      cloneObject.zalo = convertVietnamesePhone(submitObject.zalo);
-
+      console.log(submitObject);
       axios
-        .patch('/site', cloneObject)
+        .patch('/site', submitObject)
         .then((response) => {
           if (response.data.statusCode === 200) {
             message.success('Cập nhật thông tin thành công');
             handleChangeView();
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log({ ...err });
           message.error('Cập nhật thông tin thất bại');
         });
     },
@@ -63,23 +60,23 @@ const EditInfo = ({ handleChangeView, info }: IEditInfo): React.ReactElement => 
           value={formik.values.email}
           error={formik.errors.email && formik.touched.email ? formik.errors.email : false}
         />
-        <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Facebook</div>
+        <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Địa chỉ</div>
         <Input
           type="text"
-          name="facebook"
-          placeholder="Facebook"
+          name="address"
+          placeholder="Địa chỉ"
           onChange={formik.handleChange}
-          value={formik.values.facebook}
-          error={formik.errors.facebook && formik.touched.facebook ? formik.errors.facebook : false}
+          value={formik.values.address}
+          error={formik.errors.address && formik.touched.address ? formik.errors.address : false}
         />
-        <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Zalo</div>
+        <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Mã số thuế</div>
         <Input
           type="text"
-          name="zalo"
-          placeholder="Zalo"
+          name="taxCode"
+          placeholder="Mã số thuế"
           onChange={formik.handleChange}
-          value={formik.values.zalo}
-          error={formik.errors.zalo && formik.touched.zalo ? formik.errors.zalo : false}
+          value={formik.values.taxCode}
+          error={formik.errors.taxCode && formik.touched.taxCode ? formik.errors.taxCode : false}
         />
         <div className="submit_buttons pt-5 flex justify-center items-center">
           <CancelButton className="mx-2" onClick={handleChangeView}>

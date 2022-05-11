@@ -3,7 +3,6 @@ import React from 'react';
 import { Skeleton } from 'antd';
 import axios from 'services/axios.service';
 import { SiteInfo } from 'types';
-import { convertInternationalPhone } from 'services/common.service';
 import Button from 'components/Button';
 import EditInfo from './EditInfo';
 
@@ -27,19 +26,19 @@ const InfoPage = (): React.ReactElement => {
               <React.Fragment>
                 <div className="item my-3">
                   <div className="title font-bold inline">Số điện thoại: </div>
-                  <div className="item_content inline">{convertInternationalPhone(siteInfo.phone.toString())}</div>
+                  <div className="item_content inline">{siteInfo.phone}</div>
                 </div>
                 <div className="item my-3">
                   <div className="title font-bold inline">Email: </div>
                   <div className="item_content inline">{siteInfo.email}</div>
                 </div>
                 <div className="item my-3">
-                  <div className="title font-bold inline">Facebook: </div>
-                  <div className="item_content inline">{siteInfo.facebook}</div>
+                  <div className="title font-bold inline">Địa chỉ: </div>
+                  <div className="item_content inline">{siteInfo.address}</div>
                 </div>
                 <div className="item my-3">
-                  <div className="title font-bold inline">Zalo: </div>
-                  <div className="item_content inline">{convertInternationalPhone(siteInfo.zalo.toString())}</div>
+                  <div className="title font-bold inline">Mã số thuế: </div>
+                  <div className="item_content inline">{siteInfo.taxCode}</div>
                 </div>
               </React.Fragment>
             )}
@@ -67,7 +66,7 @@ const InfoPage = (): React.ReactElement => {
         }
       })
       .catch(() => {
-        message.error('Lấy thôn tin liên hệ thất bại');
+        message.error('Lấy thông tin liên hệ thất bại');
       });
   }, [view]);
 

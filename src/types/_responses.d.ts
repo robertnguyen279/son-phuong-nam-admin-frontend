@@ -143,8 +143,8 @@ export interface Carousel {
 }
 
 export interface SiteInfo {
-  phone: number;
-  zalo: number;
-  facebook: string;
+  phone: string;
+  address: string;
+  taxCode: string;
   email: string;
 }
