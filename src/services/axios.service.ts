@@ -13,8 +13,8 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (req): Promise<typeof req> => {
-    const authTokens = localStorage.getItem('21cenAuthTokens')
-      ? JSON.parse(localStorage.getItem('21cenAuthTokens'))
+    const authTokens = localStorage.getItem('SonPhuongNamAuthTokens')
+      ? JSON.parse(localStorage.getItem('SonPhuongNamAuthTokens'))
       : null;
 
     if (!authTokens) {
