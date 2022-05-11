@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/index.reducer';
 import { getProducts, deleteProduct } from 'actions/product.action';
 import { Table, Space, message, Popconfirm, Skeleton } from 'antd';
-import { currencyFormatter, convertDate } from 'services/common.service';
+import { convertDate } from 'services/common.service';
 import { Product } from 'types';
 import EditProduct from './EditProduct';
 
@@ -31,18 +31,6 @@ const ProductPage = (): React.ReactElement => {
       title: 'Phân loại',
       dataIndex: 'category',
       key: 'category',
-    },
-    {
-      title: 'Giá',
-      dataIndex: 'price',
-      key: 'price',
-      render: (price: number) => currencyFormatter.format(price),
-    },
-    {
-      title: 'Giảm giá',
-      dataIndex: 'discount',
-      key: 'discount',
-      render: (discount: number) => `${discount}%`,
     },
     {
       title: 'Ngày khởi tạo',
