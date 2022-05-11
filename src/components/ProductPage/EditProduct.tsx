@@ -6,10 +6,7 @@ import { AutoComplete } from 'components/Form';
 import { RootState } from 'reducers/index.reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from 'actions/product.action';
-import CloseIcon from 'assets/icons/close-svgrepo-com.svg';
-import PlusIcon from 'assets/icons/plus-svgrepo-com.svg';
-import { UploadImage } from 'components/Form';
-import AvailableModal from 'components/AvailableModal';
+import { UploadSingleImage } from 'components/Form';
 import Button from 'components/Button';
 import CancelButton from 'components/CancelButton';
 import { removeNull } from 'services/common.service';
@@ -23,8 +20,6 @@ const EditProduct = ({ handleChangeView, productUrl }: IEditProduct): React.Reac
   const [isLoading, setLoading] = React.useState(true);
   const [id, setId] = React.useState();
   const [options, setOptions] = React.useState([]);
-  const [availableList, setAvailableList] = React.useState([]);
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
   const categories = useSelector((state: RootState) => state.productReducer.categories);
   const getCategoriesError = useSelector((state: RootState) => state.productReducer.getCategoriesError);
   const createProductSuccess = useSelector((state: RootState) => state.productReducer.createProductSuccess);
@@ -32,23 +27,15 @@ const EditProduct = ({ handleChangeView, productUrl }: IEditProduct): React.Reac
   const formik = useFormik({
     initialValues: {
       name: '',
-      code: '',
       description: '',
       category: '',
-      price: '',
-      discount: '',
-      pictures: [],
-      available: [],
+      picture: '',
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required('Bạn phải nhập mục này'),
-      code: Yup.string().required('Bạn phải nhập mục này'),
       description: Yup.string().required('Bạn phải nhập mục này'),
       category: Yup.string().required('Bạn phải nhập mục này'),
-      pictures: Yup.array().min(1, 'Bạn phải nhập mục này'),
-      available: Yup.array().min(1, 'Bạn phải nhập mục này'),
-      price: Yup.number().required('Bạn phải nhập mục này'),
-      discount: Yup.number(),
+      picture: Yup.string().required('Bạn phải nhập mục này'),
     }),
     onSubmit: (submitObject) => {
       const cleanSubmitObject = removeNull(submitObject);
@@ -65,28 +52,12 @@ const EditProduct = ({ handleChangeView, productUrl }: IEditProduct): React.Reac
     },
   });
 
-  const hanldeUploadPicuturesSuccess = (imageList: Array<string>) => {
-    formik.values.pictures = imageList;
+  const hanldeUploadPicutureSuccess = (url: string) => {
+    formik.values.picture = url;
   };
 
   const handleAutoCompleteChange = (value: string): void => {
     formik.values.category = value;
-  };
-  const handleRemoveAvailabe = (index: number): void => {
-    setAvailableList((preState) => preState.filter((available, i) => i !== index));
-  };
-
-  const openAvailableModal = (): void => {
-    setIsModalVisible(true);
-  };
-
-  const handleModalOk = ({ size, color, quantity }: { size: string; color?: string; quantity: string }): void => {
-    setIsModalVisible(false);
-    setAvailableList((preState) => [...preState, { size, color, quantity }]);
-  };
-
-  const handleCancelModal = () => {
-    setIsModalVisible(false);
   };
 
   React.useEffect(() => {
@@ -95,15 +66,10 @@ const EditProduct = ({ handleChangeView, productUrl }: IEditProduct): React.Reac
       .then((response) => {
         const product = response.data.product;
         formik.values.name = product.name;
-        formik.values.code = product.code;
         formik.values.description = product.description;
         formik.values.category = product.category.name;
-        formik.values.pictures = product.pictures;
-        formik.values.price = product.price;
-        formik.values.available = product.available;
-        formik.values.discount = product.discount || '';
+        formik.values.picture = product.picture;
 
-        setAvailableList(product.available);
         setLoading(false);
         setId(product._id);
       })
@@ -147,10 +113,6 @@ const EditProduct = ({ handleChangeView, productUrl }: IEditProduct): React.Reac
     }
   }, [createProductError]);
 
-  React.useEffect(() => {
-    formik.values.available = availableList;
-  }, [availableList]);
-
   return (
     <div className="animate__animated animate__fadeInRight">
       <div className="title md:pt-20 mb-10 text-center font-bold text-2xl">Sửa sản phẩm</div>
@@ -166,15 +128,6 @@ const EditProduct = ({ handleChangeView, productUrl }: IEditProduct): React.Reac
             onChange={formik.handleChange}
             value={formik.values.name}
             error={formik.errors.name && formik.touched.name ? formik.errors.name : false}
-          />
-          <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Code</div>
-          <Input
-            type="text"
-            name="code"
-            placeholder="Mã sản phẩm"
-            onChange={formik.handleChange}
-            value={formik.values.code}
-            error={formik.errors.code && formik.touched.code ? formik.errors.code : false}
           />
           <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Mô tả sản phẩm</div>
           <Textarea
@@ -192,61 +145,15 @@ const EditProduct = ({ handleChangeView, productUrl }: IEditProduct): React.Reac
             onChange={handleAutoCompleteChange}
             error={formik.errors.category && formik.touched.category ? formik.errors.category : false}
           />
-          <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Hình ảnh</div>
-          <UploadImage
-            accept="image/png, image/jpeg, image/jpg"
-            error={formik.errors.pictures && formik.touched.pictures ? formik.errors.pictures : false}
-            initialPictures={formik.values.pictures}
-            handleUploadSuccess={hanldeUploadPicuturesSuccess}
-          />
-          <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Giá</div>
-          <Input
-            type="text"
-            name="price"
-            placeholder="Giá sản phẩm"
-            onChange={formik.handleChange}
-            value={formik.values.price}
-            error={formik.errors.price && formik.touched.price ? formik.errors.price : false}
-          />
-          <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Chủng loại</div>
-          <div className="add_available flex ml-3 cursor-pointer text-blue" onClick={openAvailableModal}>
-            <div className="plus w-4 mr-1">
-              <img src={PlusIcon} alt="plus" />
-            </div>
-            <div className="text">Thêm chủng loại</div>
+          <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Ảnh đại diện</div>
+          <div className="w-60 relative">
+            <UploadSingleImage
+              accept="image/png, image/jpeg, image/jpg"
+              error={formik.errors.picture && formik.touched.picture ? formik.errors.picture : false}
+              handleUploadSuccess={hanldeUploadPicutureSuccess}
+              initialPicture={formik.values.picture}
+            />
           </div>
-          <AvailableModal
-            isModalVisible={isModalVisible}
-            handleModalOk={handleModalOk}
-            handleCancelModal={handleCancelModal}
-          />
-          <p className="relative text-xs text-red-600">
-            {formik.errors.available && formik.touched.available && formik.errors.available}
-          </p>
-          <div className="available_list flex justify-start flex-wrap">
-            {availableList.map((available, i) => (
-              <div key={i} className="available_wrapper m-1 p-3 relative">
-                <img
-                  src={CloseIcon}
-                  alt="close-icon"
-                  className="absolute right-0 top-0 w-4 cursor-pointer"
-                  onClick={() => handleRemoveAvailabe(i)}
-                />
-                <div className="size text-sm">Size: {available.size}</div>
-                {available.color && <div className="color text-sm">Màu: {available.color}</div>}
-                <div className="quantity text-sm">Số lượng: {available.quantity}</div>
-              </div>
-            ))}
-          </div>
-          <div className="form_title pt-3 text-sm pb-2 text-left font-normal pl-2">Giảm giá</div>
-          <Input
-            type="text"
-            name="discount"
-            placeholder="Giảm giá (%)"
-            onChange={formik.handleChange}
-            value={formik.values.discount}
-            error={formik.errors.discount && formik.touched.discount ? formik.errors.discount : false}
-          />
           <div className="submit_buttons pt-5 flex justify-center items-center">
             <CancelButton className="mx-2" onClick={handleChangeView}>
               Hủy

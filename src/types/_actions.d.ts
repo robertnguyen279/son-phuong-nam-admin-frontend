@@ -28,9 +28,7 @@ export type CreateUserByAdmin = {
 export type CreateProduct = {
   name: string;
   description: string;
-  price: string;
-  pictures: Array<any>;
-  available: Array<any>;
+  picture: string;
   category: string;
 };
 

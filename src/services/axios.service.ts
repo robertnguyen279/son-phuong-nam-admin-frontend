@@ -1,8 +1,7 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
-// const baseURL = 'https://5ny4ma0hqf.execute-api.ap-southeast-1.amazonaws.com';
-const baseURL = 'https://r5w22b9uyd.execute-api.ap-southeast-1.amazonaws.com';
+const baseURL = 'https://tcbg3jx755.execute-api.ap-southeast-1.amazonaws.com';
 
 const axiosInstance = axios.create({
   baseURL,

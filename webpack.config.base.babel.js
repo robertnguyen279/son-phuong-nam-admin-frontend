@@ -139,7 +139,7 @@ export default {
     // Generate html file to dist folder
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public/index.html'),
-      // favicon: path.resolve(__dirname, 'public/favicon.ico'),
+      favicon: path.resolve(__dirname, 'public/favicon.ico'),
     }),
 
     // Copy static files to build dir
