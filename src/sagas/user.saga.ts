@@ -36,12 +36,12 @@ function* loginUser(action: Action<LoginUser>) {
     const result = yield call(api.loginUser, { emailOrPhone, password });
     if (remember) {
       localStorage.setItem(
-        '21cenAuthTokens',
+        'SonPhuongNamAuthTokens',
         JSON.stringify({ accessToken: result.data.accessToken, refreshToken: result.data.refreshToken }),
       );
     } else {
       localStorage.setItem(
-        '21cenAuthTokens',
+        'SonPhuongNamAuthTokens',
         JSON.stringify({ accessToken: result.data.accessToken, refreshToken: null }),
       );
     }

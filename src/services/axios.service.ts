@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
       });
 
       localStorage.setItem(
-        '21cenAuthTokens',
+        'SonPhuongNamAuthTokens',
         JSON.stringify({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken }),
       );
       req.headers.Authorization = `Bearer ${response.data.accessToken}`;
