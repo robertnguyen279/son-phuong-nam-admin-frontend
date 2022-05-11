@@ -20,7 +20,7 @@ jobs:
         run: yarn install && yarn build
 
       - name: Deploy app build to S3 bucket
-        run: aws s3 sync ./dist/prod s3://twenty-one-backend-static-webapp --delete
+        run: aws s3 sync ./dist/prod s3://${{ secrets.AWS_S3_BUCKET }} --delete
 
       - name: Invalidate AWS CloudFront
         uses: chetan/invalidate-cloudfront-action@v2
